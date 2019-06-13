@@ -81,13 +81,6 @@ mf.comp.CheckList = class extends FormItem {
         }
     }
     
-    /**
-     * check box text list
-     *
-     * @param (string/mofron-comp-text/array) checkbox text contents
-     * @return checkbox text contents list
-     * @type tag parameter
-     */
     text (prm) {
         try {
             if (undefined === prm) {
@@ -214,6 +207,29 @@ mf.comp.CheckList = class extends FormItem {
      */
     clear () {
         try { this.check(false); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    changeEvent (fnc, prm) {
+        try {
+            if (undefined === fnc) {
+                return super.changeEvent();
+            }
+            let chk_lst = this;
+            let set_fnc = (p1,p2,p3) => {
+                let lst = chk_lst.getCheckBox();
+                for (let lidx in lst) {
+                    if (lst[lidx].getId() === p1.getId()) {
+                        fnc(chk_lst, [parseInt(lidx),p2], p3);
+                        return;
+                    }
+                }
+                fnc(chk_lst, [undefined,p2],p3);
+            }
+            super.changeEvent(set_fnc, prm);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
