@@ -21,9 +21,9 @@ let chg_evt = (p1,p2,p3) => { console.log(p2); }
 
 <CheckList changeEvent=chg_evt>
     <text>
-        <Text weight=900>Check Box 1</Text>
-        <Text weight=900>Check Box 2</Text>
-        <Text weight=900>Check Box 3</Text>
+        <Text>Check Box 1</Text>
+        <Text>Check Box 2</Text>
+        <Text>Check Box 3</Text>
     </text>
 </CheckList>
 ```
