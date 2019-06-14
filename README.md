@@ -15,6 +15,7 @@ npm install mofron mofron-comp-checklist
     <tag module="mofron-comp-checklist">CheckList</tag>
     <tag module="mofron-comp-text">Text</tag>
 </require>
+
 <script run=init>
 let chg_evt = (p1,p2,p3) => { console.log(p2); }
 </script>
