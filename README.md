@@ -13,7 +13,6 @@ npm install mofron mofron-comp-checklist
 ```html
 <require>
     <tag module="mofron-comp-checklist">CheckList</tag>
-    <tag module="mofron-comp-text">Text</tag>
 </require>
 
 <script run=init>
