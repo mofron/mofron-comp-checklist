@@ -1,0 +1,9 @@
+<require>
+    <tag load="mofron-comp-checklist">CheckList</tag>
+</require>
+
+<CheckList>
+    <checkbox>check_1</checkbox>
+    <checkbox>check_2</checkbox>
+    <checkbox>check_3</checkbox>
+</CheckList>

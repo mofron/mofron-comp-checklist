@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-checklist",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "check box list component for mofron",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "mofron-comp-checkbox" : ""
   },
   "keywords": [
-    "front-end"
+    "front-end", "mofron"
   ],
   "author": "simparts",
   "license": "MIT",

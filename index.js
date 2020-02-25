@@ -1,53 +1,29 @@
 /**
- * @file   mofron-comp-checklist/index.js
+ * @file mofron-comp-checklist/index.js
  * @brief checkbox list component for mofron
- * @author simpart
+ * @license MIT
  */
-const mf = require("mofron");
 const FormItem = require("mofron-comp-formitem");
 const CheckBox = require("mofron-comp-checkbox");
+const comutl = mofron.util.common;
 
-mf.comp.CheckList = class extends FormItem {
+module.exports = class extends FormItem {
     
     /**
      * constructor
      * 
-     * @param (string) 'text' parameter
+     * @param (mixed) 'text' parameter
+     *                key-value: component config
      * @type private
      */
-    constructor (po) {
+    constructor (prm) {
         try {
             super();
             this.name("CheckList");
-            this.prmMap("text");
-            this.prmOpt(po);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * set focus status
-     *
-     * @type private 
-     */
-    afterRender () {}
-    
-    /**
-     * set chenge event
-     *
-     * @type private 
-     */
-    beforeRender () {
-        try {
-            super.beforeRender();
-            let evt = this.changeEvent();
-            for (let eidx in evt) {
-                let chk_lst = this.getCheckBox();
-                for (let cidx in chk_lst) {
-                    chk_lst[cidx].changeEvent(evt[eidx][0], evt[eidx][1]);
-                }
+            this.shortForm("text");
+            
+	    if (undefined !== prm) {
+                this.config(prm);
             }
         } catch (e) {
             console.error(e.stack);
@@ -68,7 +44,7 @@ mf.comp.CheckList = class extends FormItem {
             if (undefined === idx) {
                 let ret = [];
                 for (let cidx in chd) {
-                    if (true === mf.func.isInclude(chd[cidx], "CheckBox")) {
+                    if (true === comutl.isinc(chd[cidx], "CheckBox")) {
                         ret.push(chd[cidx]);
                     }
                 }
@@ -81,6 +57,16 @@ mf.comp.CheckList = class extends FormItem {
         }
     }
     
+    /**
+     * checkbox text contents setter/getter
+     * 
+     * @param (mixed) string: text contents string
+     *                mofron-comp-text: text contents component
+     *                array: checkbox text contents list
+     *                undefined: call as getter
+     * @return (array) checkbox text contents list
+     * @type parameter
+     */
     text (prm) {
         try {
             if (undefined === prm) {
@@ -92,6 +78,7 @@ mf.comp.CheckList = class extends FormItem {
                 }
                 return ret;
             }
+	    /* setter */
             if (true === Array.isArray(prm)) {
                 for (let pidx in prm) {
                     this.text(prm[pidx]);
@@ -106,28 +93,52 @@ mf.comp.CheckList = class extends FormItem {
     }
     
     /**
-     * item value
+     * checkbox text contents setter/getter
+     * same as 'text' parameter
+     * 
+     * @param (mixed) string: text contents string
+     *                mofron-comp-text: text contents component
+     *                array: checkbox text contents list
+     *                undefined: call as getter
+     * @return (array) checkbox text contents list
+     * @type parameter
+     */
+    checkbox (prm) {
+        try {
+            return this.text(prm);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
+     * item value setter/getter
      *
      * @param (boolean) true: check
      *                  false: uncheck
+     *                  undefined: call as getter
      * @param (number) check target index
      * @return (array) check status
-     * @type tag parameter
+     * @type parameter
      */
     check (flg, idx) {
         try {
             let chk_lst = this.getCheckBox();
-            if ("number" === typeof idx) {
-                if (undefined === chk_lst[idx]) {
-                    throw new Error("invalid index : " + idx);
-                }
-                return (undefined === flg) ? chk_lst[idx].check() : chk_lst[idx].check(flg);
+	    if ((undefined === flg) && (undefined === idx)) {
+                let ret = [];
+                for (let cidx in chk_lst) {
+                    ret.push(chk_lst[cidx].check());
+	        }
+		return ret;
+	    }
+	    if (undefined === idx) {
+	        for (let cidx in chk_lst) {
+                    chk_lst[cidx].check(flg);
+		}
+		return;
             }
-            let ret     = [];
-            for (let cidx in chk_lst) {
-                ret.push(chk_lst[cidx].check(flg));
-            }
-            return ret;
+            return chk_lst[idx].check(flg);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -140,30 +151,41 @@ mf.comp.CheckList = class extends FormItem {
      * @param (boolean) the same as 'check' parameter
      * @param (number) the same as 'check' parameter
      * @return (array) check status
-     * @type tag parameter
+     * @type parameter
      */
     value (prm, idx) {
-        try { return this.check(prm, idx); } catch (e) {
+        try {
+	    return this.check(prm, idx);
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
     /**
-     * focus check box
+     * focus check box setter/getter
      *
      * @param (boolean) true: focus target check box
      *                  false: defocus target check box
+     *                  undefined: call as getter
      * @param (number) target index
-     * @return focus status of target index
+     * @return (boolean) focus status of target index
      * @type private
      */
     focus (prm, idx) {
         try {
-            let chk = this.getCheckBox(idx);
-            if ((null === chk) || (true === Array.isArray(chk))) {
-                throw new Error("invalid index : " + idx);
+            let chk = this.getCheckBox();
+            if ((undefined === prm) && (undefined === idx)) {
+                /* getter */
+                let ret = [];
+                for (let cidx in chk) {
+                    ret.push(chk[cidx].focus());
+		}
+		return ret;
             }
+	    if (undefined === idx) {
+		return;
+	    }
             return chk[idx].focus(prm);
         } catch (e) {
             console.error(e.stack);
@@ -176,24 +198,20 @@ mf.comp.CheckList = class extends FormItem {
      * 
      * @param (boolean) true: change enable mode (default)
      *                  false: change disable mode
-     * @param (number/null) target index / get all status
+     *                  undefined: call as getter
      * @return (boolean) current item status
-     * @type tag parameter
+     * @type parameter
      */
-    status (prm, idx) {
+    status (prm) {
         try {
             let chk_lst = this.getCheckBox();
-            if ("number" === typeof idx) {
-                if (undefined === chk_lst[idx]) {
-                    throw new Error("invalid index : " + idx);
-                }
-                return (undefined === flg) ? chk_lst[idx].status() : chk_lst[idx].status(flg);
+            let ret     = chk_lst[0].status(prm);
+	    for (let cidx in chk_lst) {
+                if (ret !==  chk_lst[cidx].status()) {
+		    console.warn("mismatched check box status:" + cidx);
+		}
             }
-            let ret     = [];
-            for (let cidx in chk_lst) {
-                ret.push(chk_lst[cidx].status(flg));
-            }
-            return ret;
+	    return ret;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -206,34 +224,40 @@ mf.comp.CheckList = class extends FormItem {
      * @type function
      */
     clear () {
-        try { this.check(false); } catch (e) {
+        try {
+	    let chk = this.getCheckBox();
+	    for (let cidx in chk) {
+	        chk[cidx].check(false);
+	    }
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
+    /**
+     * change event function setter/getter
+     *
+     * @param (function) change event
+     *                   undefined: call as getter
+     * @param (mix) event parameter
+     * @return (array) event list
+     * @type private
+     */
     changeEvent (fnc, prm) {
         try {
-            if (undefined === fnc) {
-                return super.changeEvent();
+	    if (undefined === fnc) {
+	        return super.changeEvent();
             }
-            let chk_lst = this;
-            let set_fnc = (p1,p2,p3) => {
-                let lst = chk_lst.getCheckBox();
-                for (let lidx in lst) {
-                    if (lst[lidx].getId() === p1.getId()) {
-                        fnc(chk_lst, [parseInt(lidx),p2], p3);
-                        return;
-                    }
-                }
-                fnc(chk_lst, [undefined,p2],p3);
-            }
-            super.changeEvent(set_fnc, prm);
+	    super.changeEvent(fnc, prm);
+            let chk = this.getCheckBox();
+	    for (let cidx in chk) {
+                chk[cidx].changeEvent(fnc, prm);
+	    }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-module.exports = mf.comp.CheckList;
 /* end of file */
