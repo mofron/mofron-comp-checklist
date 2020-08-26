@@ -11,9 +11,9 @@ npm install mofron mofron-comp-checklist
 
 # Sample
 ```html
-<require>
+<setting>
     <tag load="mofron-comp-checklist">CheckList</tag>
-</require>
+</setting>
 
 <CheckList>
     <checkbox>check_1</checkbox>
@@ -44,4 +44,3 @@ npm install mofron mofron-comp-checklist
 | | | | false: change disable mode |
 | | | | undefined: call as getter |
 | | clear | ||
-

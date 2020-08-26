@@ -1,6 +1,6 @@
-<require>
+<setting>
     <tag load="mofron-comp-checklist">CheckList</tag>
-</require>
+</setting>
 
 <CheckList>
     <checkbox>check_1</checkbox>
