@@ -85,7 +85,15 @@ module.exports = class extends FormItem {
                 }
                 return;
             }
-            this.child(new CheckBox(prm));
+            
+	    let clst = this;
+	    let chd_evt = () => {
+                let evt = clst.changeEvent();
+		for (let eidx in evt) {
+                    evt[eidx][0](clst, clst.check(), evt[eidx][1]);
+                }
+	    };
+            this.child(new CheckBox({ text: prm, changeEvent: chd_evt }));
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -230,31 +238,6 @@ module.exports = class extends FormItem {
 	        chk[cidx].check(false);
 	    }
 	} catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    /**
-     * change event function setter/getter
-     *
-     * @param (function) change event
-     *                   undefined: call as getter
-     * @param (mix) event parameter
-     * @return (array) event list
-     * @type private
-     */
-    changeEvent (fnc, prm) {
-        try {
-	    if (undefined === fnc) {
-	        return super.changeEvent();
-            }
-	    super.changeEvent(fnc, prm);
-            let chk = this.getCheckBox();
-	    for (let cidx in chk) {
-                chk[cidx].changeEvent(fnc, prm);
-	    }
-        } catch (e) {
             console.error(e.stack);
             throw e;
         }
