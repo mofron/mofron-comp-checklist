@@ -4,7 +4,7 @@
  * @license MIT
  */
 const FormItem = require("mofron-comp-formitem");
-const CheckBox = require("mofron-comp-checkbox");
+let  CheckBox = require("mofron-comp-checkbox");
 const comutl = mofron.util.common;
 
 module.exports = class extends FormItem {
@@ -101,19 +101,16 @@ module.exports = class extends FormItem {
     }
     
     /**
-     * checkbox text contents setter/getter
-     * same as 'text' parameter
+     * checkbox text contents setter
      * 
-     * @param (mixed) string: text contents string
-     *                mofron-comp-text: text contents component
-     *                array: checkbox text contents list
-     *                undefined: call as getter
-     * @return (array) checkbox text contents list
+     * @param (CheckBox) checkbox component 
      * @type parameter
      */
     checkbox (prm) {
         try {
-            return this.text(prm);
+	    if ('function' === typeof prm) {
+                CheckBox = prm;
+	    }
 	} catch (e) {
             console.error(e.stack);
             throw e;
@@ -134,6 +131,7 @@ module.exports = class extends FormItem {
         try {
             let chk_lst = this.getCheckBox();
 	    if ((undefined === flg) && (undefined === idx)) {
+	        /* getter */
                 let ret = [];
                 for (let cidx in chk_lst) {
                     ret.push(chk_lst[cidx].check());
@@ -141,8 +139,14 @@ module.exports = class extends FormItem {
 		return ret;
 	    }
 	    if (undefined === idx) {
-	        for (let cidx in chk_lst) {
-                    chk_lst[cidx].check(flg);
+	        if (true === Array.isArray(flg)) {
+                    for (let fidx in flg) {
+                        chk_lst[fidx].check(flg[fidx]);
+		    }
+		} else {
+	            for (let cidx in chk_lst) {
+                        chk_lst[cidx].check(flg);
+		    }
 		}
 		return;
             }
